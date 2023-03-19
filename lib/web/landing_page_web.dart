@@ -47,13 +47,13 @@ class _LandingPageWebState extends State<LandingPageWeb> {
               children: [
                 urlLancher(
                     imgPath: "assets/instagram2.svg",
-                    url: "https://www.instagram.com/tomcruise/"),
+                    url: "https://www.instagram.com/s_h_a_s_hi_"),
                 urlLancher(
                     imgPath: "assets/twitter.svg",
                     url: "https://www.twitter.com/tomcruise"),
                 urlLancher(
                     imgPath: "assets/github.svg",
-                    url: "https://www.github.com/paulinaknop"),
+                    url: "https://github.com/shashank-333"),
               ],
             )
           ],
@@ -355,6 +355,11 @@ class _LandingPageWebState extends State<LandingPageWeb> {
                     hintText: "Please type your message",
                     maxLine: 10.0,
                     controller: _messageController,
+                    validator: (text) {
+                      if (text.toString().isEmpty) {
+                        return "Message is required";
+                      }
+                    },
                   ),
                   MaterialButton(
                     elevation: 60.0,
@@ -364,9 +369,20 @@ class _LandingPageWebState extends State<LandingPageWeb> {
                     minWidth: 200.0,
                     color: Colors.tealAccent,
                     child: SansBold("Submit", 20.0),
-                    onPressed: () {
+                    onPressed: () async {
                       logger.d(_firstNameController.text);
-                      formKey.currentState!.validate();
+                      final addData = new AddDataFirestore();
+                      if (formKey.currentState!.validate()) {
+                        await addData.addResponse(
+                            _firstNameController.text,
+                            _lastNameController.text,
+                            _emailController.text,
+                            _phoneController.text,
+                            _messageController.text);
+                        formKey.currentState!.reset();
+                        DialogError(context);
+                      }
+                      ;
                     },
                   ),
                 ],
